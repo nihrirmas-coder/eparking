@@ -7,96 +7,102 @@ Original file is located at
     https://colab.research.google.com/drive/1wWWIdhLc8x0o2pmykUoBuqiwF-rgjCgO
 """
 
-def kendaraan_masuk():
+HARGA_PER_JAM = 2000
+
+def input_waktu(pesan):
   while True:
-      waktu = input(" masukkan waktu, (jam.menit) contoh: 18.20: ")
-      jam1, menit1 = map(int, waktu.split("."))
-      if jam1 + menit1 > 82 or menit1 > 59 or jam1 > 23:
-        print("Waktu tidak valid, Silahkan isi kembali")
+    waktu = input(pesan).strip()
+    try:
+      jam, menit = map(int, waktu.split("."))
+    except ValueError:
+      print("Format waktu salah, gunakan jam.menit (contoh: 18.20)")
+      continue
+    if 0 <= jam <= 23 and 0 <= menit <= 59:
+      return waktu, jam, menit
+    print("Waktu tidak valid, Silahkan isi kembali")
+
+class parkiran:
+  def __init__(self):
+    self.parkir = {}
+    self.slot_terisi = []
+
+  def kendaraan_masuk(self):
+    waktu, jam1, menit1 = input_waktu(" masukkan waktu, (jam.menit) contoh: 18.20: ")
+
+    plat = input(" Masukkan Plat nomer anda: ").upper().strip()
+    if not plat:
+      print("\n[Error] Plat nomor tidak boleh kosong!\n")
+      return
+    if plat in self.parkir:
+      print("\n[Error] Kendaraan dengan plat", plat, "sudah ada di parkiran!\n")
+      return
+
+    print("Slot yang terisi: ", self.slot_terisi)
+    while True:
+      pilih_slot = input(" pilih slot yang tersedia (A01 - A99): ").strip().capitalize()
+      if pilih_slot in self.slot_terisi:
+        print("\n Pemilihan slot gagal", pilih_slot, "Sudah terisi\n")
+        print("=========== Silahkan isi kembali ===========\n")
+      elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1:].isdigit():
+        self.parkir[plat] = {
+            "waktu_masuk": waktu,
+            "jam1": jam1,
+            "menit1": menit1,
+            "slot": pilih_slot
+        }
+        self.slot_terisi.append(pilih_slot)
+        print("\n==========\nPemilihan slot berhasil, silahkan masuk\n==========\n")
+        break
       else:
-        break
-      plat = input(" Masukkan Plat nomer anda: ").upper()
-      print("Slot yang terisi: ", slot_terisi )
-      while True:
-        pilih_slot = input(" pilih slot yang tersedia: ").capitalize()
-        if pilih_slot in slot_terisi:
-          print("\n Pemilihan slot gagal", pilih_slot, "Sudah terisi\n")
-          print("=========== Silahkan isi kembali ===========\n")
-        elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1].isdigit() and pilih_slot[2].isdigit():
-  
-          parkir[plat] = {
-              "waktu_masuk": waktu,
-              "jam1": jam1,
-              "menit1": menit1,
-              "slot": pilih_slot
-          }
-          slot_terisi.append(pilih_slot)
-          print("\n==========\nPemilihan slot berhasil, silahkan masuk\n==========\n")
-          break
-        else:
-          print("pemilihan Slot tidak Valid")
-          print("=========== Silahkan isi kembali ===========\n")
+        print("pemilihan Slot tidak Valid")
+        print("=========== Silahkan isi kembali ===========\n")
 
-def kendaraan_keluar():
-    plat2 = input("masukkan plat nomor: ").upper()
-    if plat2 in parkir:
-      while True:
-       waktu_keluar = input(" masukkan waktu ketika keluar, (jam.menit) contoh: 18.20: ")
-       jam2, menit2 = map(int, waktu_keluar.split("."))
-       if jam2 + menit2 > 82 or menit2 > 59 or jam2 > 23:
-        print("Waktu tidak valid, Silahkan isi kembali")
-       else:
-        break
-      W2 = jam2 * 60 + menit2
-
-      data_kendaraan = parkir[plat2]
-      W1 = data_kendaraan["jam1"] * 60 + data_kendaraan["menit1"]
-
-      if W1 > W2:
-        W2 += 24 * 60
-      selisih = W2 - W1
-      if selisih < 1:
-         selisih = 1
-      selisih_jam = (selisih / 60)
-      harga_tiket = 2000 * selisih_jam
-
-      print("------------ struk parkir ------------")
-      print("Plat nomor           :", plat2)
-      print("waktu masuk          :", data_kendaraan["waktu_masuk"])
-      print("waktu keluar         :", waktu_keluar)
-      print("total jam masuk      :", selisih_jam )
-      print("harga parkir per jam : 2000" )
-      print("Slot parkir          :", data_kendaraan["slot"])
-      print("\ntotal harga        :", harga_tiket)
-      print("--------------------------------------")
-      print("  Terimakasih atas kunjungan anda \n")
-
-      slot_terisi.remove(data_kendaraan["slot"])
-      parkir.pop(plat2)
-    else:
+  def kendaraan_keluar(self):
+    plat2 = input("masukkan plat nomor: ").upper().strip()
+    if plat2 not in self.parkir:
       print("\n[Error] Kendaraan dengan plat tersebut tidak ditemukan di parkiran!\n")
+      return
 
+    waktu_keluar, jam2, menit2 = input_waktu(" masukkan waktu ketika keluar, (jam.menit) contoh: 18.20: ")
+    W2 = jam2 * 60 + menit2
 
-parkir = {}
-slot_terisi = []
+    data_kendaraan = self.parkir[plat2]
+    W1 = data_kendaraan["jam1"] * 60 + data_kendaraan["menit1"]
+
+    if W1 > W2:
+      W2 += 24 * 60
+    selisih = W2 - W1
+    if selisih < 1:
+      selisih = 1
+    selisih_jam = selisih / 60
+    harga_tiket = round(HARGA_PER_JAM * selisih_jam)
+
+    print("------------ struk parkir ------------")
+    print("Plat nomor           :", plat2)
+    print("waktu masuk          :", data_kendaraan["waktu_masuk"])
+    print("waktu keluar         :", waktu_keluar)
+    print("total jam masuk      :", round(selisih_jam, 2), "jam")
+    print("harga parkir per jam :", HARGA_PER_JAM)
+    print("Slot parkir          :", data_kendaraan["slot"])
+    print("\ntotal harga          :", harga_tiket)
+    print("--------------------------------------")
+    print("  Terimakasih atas kunjungan anda \n")
+
+    self.slot_terisi.remove(data_kendaraan["slot"])
+    self.parkir.pop(plat2)
 
 if __name__ == "__main__":
+  sistem = parkiran()
   while True:
-    print(" ============================\n", "e-parking Restaurant\n","============================")
-    print("apakah kendaraan masuk atau keluar\n", "1 - kendaraan masuk\n", "2 - kendaraan keluar\n"," ============================")
-    print("3 - exit programm")
-    pilihan = input(" pilih 1 atau 2 atau 3: ").lower()
+    print(" ============================\n", "e-parking Restaurant\n", "============================")
+    print("apakah kendaraan masuk atau keluar\n", "1 - kendaraan masuk\n", "2 - kendaraan keluar\n", "3 - exit program\n", "============================")
+    pilihan = input(" pilih 1 atau 2 atau 3: ").strip()
     if pilihan == "1":
-      kendaraan_masuk()
-
+      sistem.kendaraan_masuk()
     elif pilihan == "2":
-      kendaraan_keluar()
-
+      sistem.kendaraan_keluar()
     elif pilihan == "3":
+      print("Terimakasih")
       break
-    
-  # print("\n akhiri Program? (y/n) ")
-  # akhir = input(" y/n: ").lower()
-  # if akhir == "y":
-  #   print("Terimakasih")
-  #   break
+    else:
+      print("\nPilihan tidak valid, silahkan pilih 1, 2, atau 3\n")
