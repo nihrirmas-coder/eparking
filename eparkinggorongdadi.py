@@ -7,43 +7,37 @@ Original file is located at
     https://colab.research.google.com/drive/1wWWIdhLc8x0o2pmykUoBuqiwF-rgjCgO
 """
 
-parkir = {}
-slot_terisi = []
-while True:
-  print(" ============================\n", "e-parking Restaurant\n","============================")
-  print("apakah kendaraan masuk atau keluar\n", "1 - kendaraan masuk\n", "2 - kendaraan keluar\n"," ============================")
-  pilihan = input(" pilih 1 atau 2: ").lower()
-  if pilihan == "1":
-    while True:
-     waktu = input(" masukkan waktu, (jam.menit) contoh: 18.20: ")
-     jam1, menit1 = map(int, waktu.split("."))
-     if jam1 + menit1 > 82 or menit1 > 59 or jam1 > 23:
-      print("Waktu tidak valid, Silahkan isi kembali")
-     else:
-      break
-    plat = input(" Masukkan Plat nomer anda: ").upper()
-    print("Slot yang terisi: ", slot_terisi )
-    while True:
-      pilih_slot = input(" pilih slot yang tersedia: ").capitalize()
-      if pilih_slot in slot_terisi:
-        print("\n Pemilihan slot gagal", pilih_slot, "Sudah terisi\n")
-        print("=========== Silahkan isi kembali ===========\n")
-      elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1].isdigit() and pilih_slot[2].isdigit():
-
-        parkir[plat] = {
-            "waktu_masuk": waktu,
-            "jam1": jam1,
-            "menit1": menit1,
-            "slot": pilih_slot
-        }
-        slot_terisi.append(pilih_slot)
-        print("\n==========\nPemilihan slot berhasil, silahkan masuk\n==========\n")
-        break
+def kendaraan_masuk():
+  while True:
+      waktu = input(" masukkan waktu, (jam.menit) contoh: 18.20: ")
+      jam1, menit1 = map(int, waktu.split("."))
+      if jam1 + menit1 > 82 or menit1 > 59 or jam1 > 23:
+        print("Waktu tidak valid, Silahkan isi kembali")
       else:
-        print("pemilihan Slot tidak Valid")
-        print("=========== Silahkan isi kembali ===========\n")
+        break
+      plat = input(" Masukkan Plat nomer anda: ").upper()
+      print("Slot yang terisi: ", slot_terisi )
+      while True:
+        pilih_slot = input(" pilih slot yang tersedia: ").capitalize()
+        if pilih_slot in slot_terisi:
+          print("\n Pemilihan slot gagal", pilih_slot, "Sudah terisi\n")
+          print("=========== Silahkan isi kembali ===========\n")
+        elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1].isdigit() and pilih_slot[2].isdigit():
+  
+          parkir[plat] = {
+              "waktu_masuk": waktu,
+              "jam1": jam1,
+              "menit1": menit1,
+              "slot": pilih_slot
+          }
+          slot_terisi.append(pilih_slot)
+          print("\n==========\nPemilihan slot berhasil, silahkan masuk\n==========\n")
+          break
+        else:
+          print("pemilihan Slot tidak Valid")
+          print("=========== Silahkan isi kembali ===========\n")
 
-  elif pilihan == "2":
+def kendaraan_keluar():
     plat2 = input("masukkan plat nomor: ").upper()
     if plat2 in parkir:
       while True:
@@ -82,8 +76,27 @@ while True:
     else:
       print("\n[Error] Kendaraan dengan plat tersebut tidak ditemukan di parkiran!\n")
 
-    print("\n akhiri Program? (y/n) ")
-    akhir = input(" y/n: ").lower()
-    if akhir == "y":
-      print("Terimakasih")
+
+parkir = {}
+slot_terisi = []
+
+if __name__ == "__main__":
+  while True:
+    print(" ============================\n", "e-parking Restaurant\n","============================")
+    print("apakah kendaraan masuk atau keluar\n", "1 - kendaraan masuk\n", "2 - kendaraan keluar\n"," ============================")
+    print("3 - exit programm")
+    pilihan = input(" pilih 1 atau 2 atau 3: ").lower()
+    if pilihan == "1":
+      kendaraan_masuk()
+
+    elif pilihan == "2":
+      kendaraan_keluar()
+
+    elif pilihan == "3":
       break
+    
+  # print("\n akhiri Program? (y/n) ")
+  # akhir = input(" y/n: ").lower()
+  # if akhir == "y":
+  #   print("Terimakasih")
+  #   break
