@@ -28,7 +28,7 @@ while True:
       if pilih_slot in slot_terisi:
         print("\n Pemilihan slot gagal", pilih_slot, "Sudah terisi\n")
         print("=========== Silahkan isi kembali ===========\n")
-      elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1] == int and pilih_slot[2] == int:
+      elif len(pilih_slot) == 3 and pilih_slot[0] == "A" and pilih_slot[1].isdigit() and pilih_slot[2].isdigit():
 
         parkir[plat] = {
             "waktu_masuk": waktu,
@@ -51,10 +51,8 @@ while True:
        jam2, menit2 = map(int, waktu_keluar.split("."))
        if jam2 + menit2 > 82 or menit2 > 59 or jam2 > 23:
         print("Waktu tidak valid, Silahkan isi kembali")
-      else:
-       break
-      waktu_keluar = input("masukkan jam keluar: ")
-      jam2, menit2 = map(int, waktu_keluar.split("."))
+       else:
+        break
       W2 = jam2 * 60 + menit2
 
       data_kendaraan = parkir[plat2]
