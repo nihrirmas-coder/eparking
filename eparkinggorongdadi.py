@@ -7,6 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1wWWIdhLc8x0o2pmykUoBuqiwF-rgjCgO
 """
 
+import math
+
 HARGA_PER_JAM = 2000
 
 def input_waktu(pesan):
@@ -74,7 +76,7 @@ class parkiran:
     selisih = W2 - W1
     if selisih < 1:
       selisih = 1
-    selisih_jam = selisih / 60
+    selisih_jam = math.ceil(selisih / 60)
     harga_tiket = round(HARGA_PER_JAM * selisih_jam)
 
     print("------------ struk parkir ------------")
