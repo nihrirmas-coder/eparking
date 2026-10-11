@@ -7,6 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1wWWIdhLc8x0o2pmykUoBuqiwF-rgjCgO
 """
 
+#code taek cok ga rapi blas
+
 parkir = {}
 slot_terisi = []
 
